@@ -1,12 +1,12 @@
 <%-- 
     Document   : shoppingList
-    Created on : Oct 12, 2017, 9:37:48 AM
-    Author     : 725899
+    Created on : Oct 14, 2017, 1:31:42 PM
+    Author     : 734972
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="d" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -16,8 +16,7 @@
     <body>
         <h1>Shopping List</h1>
         <br/>
-        <b>Hello ${username}.</b><br/>
-        <br/>
+        <b>Hello, ${username}</b>
         <a href="ShoppingList?action=logout">Logout</a>
 
         <h1>List</h1>
@@ -27,7 +26,7 @@
             <input type='submit' value='Add'></br>
         </form>
         
-        <c:if test="${fn:length(shoppingList.items) gt 0}">
+        <c:if test="${d:length(shoppingList.items) gt 0}">
             <form action='ShoppingList' method='GET' name='remove'>
                 <c:forEach var="item" items="${shoppingList.items}">
                     <input type='radio' name='item' value='${item.name}'> ${item.name}</br>
@@ -36,5 +35,7 @@
                 <input type='submit' value='Delete'></br>
             </form>
         </c:if>
+        <br>
+        ${message}
     </body>
 </html>

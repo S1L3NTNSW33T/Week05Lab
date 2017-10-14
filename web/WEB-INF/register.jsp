@@ -1,7 +1,7 @@
 <%-- 
     Document   : register
-    Created on : Oct 12, 2017, 9:37:56 AM
-    Author     : 725899
+    Created on : Oct 14, 2017, 1:12:39 PM
+    Author     : 734972
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
@@ -18,7 +18,7 @@
         <input type='hidden' name='action' value='register'>
         <input type='submit' value='Register name'></br>
         </form>
-        
+        <br>
         ${message}
     </body>
 </html>

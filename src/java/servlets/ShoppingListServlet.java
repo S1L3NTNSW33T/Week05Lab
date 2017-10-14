@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package servlets;
 
 import business.Item;
@@ -14,100 +9,64 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-
-/**
- *
- * @author 725899
- */
 public class ShoppingListServlet extends HttpServlet {
 
-
-    // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /**
-     * Handles the HTTP <code>GET</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-            String actionParam = request.getParameter("action");
-            String usernameParam = (String) request.getParameter("username");
-            String itemParam = (String) request.getParameter("item");
-            
-            //initalizing session
-            HttpSession session = request.getSession();
-            session.setMaxInactiveInterval(60*2);
-            ShoppingList shoppingList = (ShoppingList) session.getAttribute("shoppingList");
-            if (shoppingList == null) {
-                shoppingList = new ShoppingList();
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
+        String user = (String) request.getParameter("username");
+        String action = request.getParameter("action");
+        String basketItem = (String) request.getParameter("item");
+
+        HttpSession session = request.getSession();
+
+        ShoppingList shoppingList = (ShoppingList) session.getAttribute("shoppingList");
+        if (shoppingList == null) {
+
+            shoppingList = new ShoppingList();
+        }
+
+        if (action != null && action.equals("register") && user != null) {
+            if (user == "") {
+                request.setAttribute("message", "ENTER A USERNAME, WHATCHU TRYNA PULL WITH THIS BLANK CRAP?");
+                request.getRequestDispatcher("/WEB-INF/register.jsp").forward(request, response);
             }
-            
-            //action = register
-            if (actionParam != null && actionParam.equals("register") && usernameParam != null && !usernameParam.equals("")) {
-                session.setAttribute("username", usernameParam);
-            }
-            
-            //action = add
-            else if (actionParam != null && actionParam.equals("add")) {
-                Item item = new Item();
-                item.setName(itemParam);
-                shoppingList.addItem(item);
-               
-                session.setAttribute("shoppingList", shoppingList);
-            }
-            
-            //action = delete
-            else if (actionParam != null && actionParam.equals("delete")) {
-                Item item = new Item();
-                item.setName(itemParam);
-                shoppingList.removeItem(item);
+            session.setAttribute("username", user);
+
+        } else if (action != null && action.equals("add")) {
+            if (basketItem == "") {
                 
+                request.setAttribute("message", "WHAT IS THIS, A SHOPPING LIST FOR WIZARDS?! NO BLANK ITEMS");
+                request.getRequestDispatcher("/WEB-INF/shoppingList.jsp").forward(request, response);
+            } else {
+                
+                Item item = new Item();
+                item.setName(basketItem);
+                shoppingList.addItem(item);
                 session.setAttribute("shoppingList", shoppingList);
             }
-            
-            //action = logout
-            else if (actionParam != null && actionParam.equals("logout")) {
-                request.setAttribute("message", "You are logged out.");
-                session.invalidate();
-                request.getRequestDispatcher("/WEB-INF/register.jsp").forward(request, response);
-                return;
-            }
-            
-            //no action command
-            else {
-                request.getRequestDispatcher("/WEB-INF/register.jsp").forward(request, response);
-                return;
-            }
-            
-            request.setAttribute("username", (String)session.getAttribute("username"));
-            request.getRequestDispatcher("/WEB-INF/shoppingList.jsp").forward(request, response);
-    }
+        } else if (action != null && action.equals("delete")) {
 
-    /**
-     * Handles the HTTP <code>POST</code> method.
-     *
-     * @param request servlet request
-     * @param response servlet response
-     * @throws ServletException if a servlet-specific error occurs
-     * @throws IOException if an I/O error occurs
-     */
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+            Item item = new Item();
+            item.setName(basketItem);
+            shoppingList.removeItem(item);
+            session.setAttribute("shoppingList", shoppingList);
+
+        } else if (action != null && action.equals("logout")) {
+
+            request.setAttribute("message", "You are logged out.");
+            session.invalidate();
+            request.getRequestDispatcher("/WEB-INF/register.jsp").forward(request, response);
+            return;
+
+        } else {
+
+            request.getRequestDispatcher("/WEB-INF/register.jsp").forward(request, response);
+            return;
+        }
+
+        request.setAttribute("username", (String) session.getAttribute("username"));
+        request.getRequestDispatcher("/WEB-INF/shoppingList.jsp").forward(request, response);
     }
-    
-    /**
-     * Returns a short description of the servlet.
-     *
-     * @return a String containing servlet description
-     */
-    @Override
-    public String getServletInfo() {
-        return "Short description";
-    }// </editor-fold>
 
 }
